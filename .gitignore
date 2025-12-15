@@ -1,0 +1,9 @@
+# Ignore images in dataset but keep folder structure
+dataset/**/*.jpg
+dataset/**/*.jpeg
+dataset/**/*.png
+dataset/**/*.bmp
+dataset/**/*.gif
+
+# Virtual environment
+attendance_env/
