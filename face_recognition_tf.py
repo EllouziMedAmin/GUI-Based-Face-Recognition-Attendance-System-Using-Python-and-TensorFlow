@@ -1,31 +1,39 @@
 import cv2
 import numpy as np
-from mtcnn import MTCNN
-from keras_facenet import FaceNet
+import insightface
+from insightface.app import FaceAnalysis
 
-detector = MTCNN()
-embedder = FaceNet()
+# Initialize InsightFace (ArcFace model: buffalo_l)
+# This downloads the model once and then runs offline.
+print("Loading InsightFace model...")
+try:
+    # Try GPU (ctx_id=0)
+    app = FaceAnalysis(name="buffalo_l", providers=['CUDAExecutionProvider'])
+    app.prepare(ctx_id=0, det_size=(640, 640))
+    print("Model loaded on GPU.")
+except Exception:
+    # Fallback to CPU (ctx_id=-1)
+    print("GPU not found. Switching to CPU...")
+    app = FaceAnalysis(name="buffalo_l", providers=['CPUExecutionProvider'])
+    app.prepare(ctx_id=-1, det_size=(640, 640))
 
-def extract_face(img, padding=0.3):
-    faces = detector.detect_faces(img)
-    if len(faces) == 0:
+def get_face_analysis(img_bgr):
+    """
+    Scans the image for faces using InsightFace.
+    Returns the single 'best' face object (largest area) containing:
+    - .embedding (vector)
+    - .bbox (coordinates)
+    """
+    if img_bgr is None: 
         return None
-
-    x, y, w, h = faces[0]['box']
-
-    pad = int(w * padding)
-    x1 = max(0, x - pad)
-    y1 = max(0, y - pad)
-    x2 = min(img.shape[1], x + w + pad)
-    y2 = min(img.shape[0], y + h + pad)
-
-    face = img[y1:y2, x1:x2]
-    face = cv2.resize(face, (160, 160))
-    return face
-
-def get_embedding(face):
-    face = face.astype("float32")
-    face = (face - 127.5) / 128.0
-    embedding = embedder.embeddings([face])[0]
-    embedding = embedding / np.linalg.norm(embedding)
-    return embedding
+    
+    # InsightFace works directly on BGR images (no conversion needed)
+    faces = app.get(img_bgr)
+    
+    if not faces:
+        return None
+        
+    # Sort faces by area (width * height) to pick the main person
+    best_face = max(faces, key=lambda f: (f.bbox[2] - f.bbox[0]) * (f.bbox[3] - f.bbox[1]))
+    
+    return best_face
