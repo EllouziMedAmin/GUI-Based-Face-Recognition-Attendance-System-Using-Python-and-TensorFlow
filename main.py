@@ -22,7 +22,8 @@ def register_student():
 
     print("Press SPACE to capture images (5 images recommended)")
     while count < 5:
-        ret, frame = cap.read()
+        ret, frame_row = cap.read()
+        frame =cv2.flip(frame_row, 1)
         cv2.imshow("Register Face", frame)
 
         if cv2.waitKey(1) & 0xFF == 32:
@@ -66,7 +67,8 @@ def recognize_and_mark():
     print("Press Q to quit")
 
     while True:
-        ret, frame = cap.read()
+        ret, frame_raw = cap.read()
+        frame = cv2.flip(frame_raw, 1)
         face = extract_face(frame)
 
         if face is not None:
