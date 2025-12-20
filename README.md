@@ -34,7 +34,7 @@ The system utilizes **InsightFace (ArcFace)** for high-accuracy face detection a
 
 ### Prerequisites
 
-* Python 3.11 (Recommended based on the provided wheel file)
+* Python 3.11 (REQUIRED): This project relies on a specific pre-compiled wheel file for the insightface library which is built only for Python 3.11. Using other versions (like 3.10 or 3.12) will cause the installation to crash.
 * A webcam
 
 ### Step 1: Clone the Repository
@@ -47,7 +47,7 @@ It is recommended to use a virtual environment.
 
 ```bash
 # Create a virtual environment
-python -m venv venv
+python -3.11 -m venv venv
 
 # Activate it
 # On Windows:
