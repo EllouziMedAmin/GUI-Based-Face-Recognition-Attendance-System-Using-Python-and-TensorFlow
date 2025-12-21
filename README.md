@@ -40,6 +40,9 @@ The system utilizes **InsightFace (ArcFace)** for high-accuracy face detection a
 ### Step 1: Clone the Repository
 
 Download or clone this project to your local machine.
+```bash
+git clone https://github.com/EllouziMedAmin/GUI-Based-Face-Recognition-Attendance-System-Using-Python-and-TensorFlow.git
+```
 
 ### Step 2: Install Dependencies
 
