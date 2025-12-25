@@ -8,13 +8,13 @@ from insightface.app import FaceAnalysis
 print("Loading InsightFace model...")
 try:
     # Try GPU (ctx_id=0)
-    app = FaceAnalysis(name="buffalo_l", providers=['CUDAExecutionProvider'])
+    app = FaceAnalysis(name="buffalo_s", providers=['CUDAExecutionProvider'])
     app.prepare(ctx_id=0, det_size=(640, 640))
     print("Model loaded on GPU.")
 except Exception:
     # Fallback to CPU (ctx_id=-1)
     print("GPU not found. Switching to CPU...")
-    app = FaceAnalysis(name="buffalo_l", providers=['CPUExecutionProvider'])
+    app = FaceAnalysis(name="buffalo_s", providers=['CPUExecutionProvider'])
     app.prepare(ctx_id=-1, det_size=(640, 640))
 
 def get_face_analysis(img_bgr):
